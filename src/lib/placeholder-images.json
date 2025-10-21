@@ -1,0 +1,10 @@
+{
+  "placeholderImages": [
+    {
+      "id": "qr-code-1",
+      "description": "QR code for payment simulation",
+      "imageUrl": "https://images.unsplash.com/photo-1662383729882-e03ce8e00887?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxxciUyMGNvZGV8ZW58MHx8fHwxNzYwOTc2ODkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "qr code"
+    }
+  ]
+}

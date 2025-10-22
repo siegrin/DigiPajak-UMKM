@@ -30,7 +30,7 @@ Jika Anda ingin langsung berkontribusi dengan kode (misalnya, memperbaiki bug at
 
 2.  **Clone Fork Anda**: Clone repositori yang sudah Anda *fork* ke mesin lokal Anda.
     ```bash
-    git clone https://github.com/NAMA_ANDA/digipajak-umkm.git
+    git clone https://github.com/YOUR_USERNAME/digipajak-umkm.git
     cd digipajak-umkm
     ```
 

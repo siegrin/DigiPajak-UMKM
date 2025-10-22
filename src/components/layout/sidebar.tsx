@@ -8,18 +8,13 @@ import {
   Link2,
   BadgePercent,
   BookOpen,
+  LogOut,
   Settings,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { Button } from '../ui/button';
+import { useUmkm } from '@/context/UmkmContext';
+import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,6 +25,16 @@ const navLinks = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { logout } = useUmkm();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Berhasil Keluar",
+      description: "Anda telah keluar dari sesi Anda.",
+    });
+  };
 
   return (
     <div className="hidden border-r bg-card md:block">
@@ -41,7 +46,7 @@ export default function Sidebar() {
               <span className="">DigiPajak UMKM</span>
             </Link>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               {navLinks.map((link) => (
                  <Tooltip key={link.href}>
@@ -64,6 +69,37 @@ export default function Sidebar() {
                 </Tooltip>
               ))}
             </nav>
+          </div>
+           <div className="mt-auto flex flex-col gap-2 p-2 lg:px-4">
+             <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href="/settings"
+                     className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          pathname === "/settings"
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
+                  >
+                    <Settings className="h-4 w-4" />
+                    Pengaturan
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Pengaturan</p>
+                </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" className="justify-start gap-3 px-3 text-muted-foreground hover:text-primary" onClick={handleLogout}>
+                        <LogOut className="h-4 w-4" />
+                        Keluar
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                    <p>Keluar</p>
+                </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </TooltipProvider>

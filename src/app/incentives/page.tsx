@@ -16,11 +16,12 @@ import { useUmkm } from '@/context/UmkmContext';
 const qrCodeImage = placeholderImages.find(p => p.id === "qr-code-1");
 
 export default function IncentivesPage() {
-    const { umkmData, taxFreeLimit } = useUmkm();
+    const { umkmData, taxFreeLimit, isLoading } = useUmkm();
     const { toast } = useToast();
     const [billingCode, setBillingCode] = useState('');
 
     useEffect(() => {
+        // This effect runs only on the client, preventing hydration mismatch
         const year = new Date().getFullYear();
         const randomPart = Math.floor(Math.random() * 100000000000).toString().padStart(11, '0');
         setBillingCode(`8${year}${randomPart}`);
@@ -35,12 +36,9 @@ export default function IncentivesPage() {
     const pphFinal = taxableOmzet * 0.005;
 
     const estimasiPenghematan = useMemo(() => {
-        if (totalOmzet <= taxFreeLimit) {
-            // Penghematan adalah 0.5% dari total omzet jika tidak ada batas 500jt
-            return totalOmzet * 0.005;
-        }
-        // Penghematan adalah 0.5% dari batas 500jt
-        return taxFreeLimit * 0.005;
+        // Savings is 0.5% of the turnover up to the tax-free limit.
+        const applicableOmzet = Math.min(totalOmzet, taxFreeLimit);
+        return applicableOmzet * 0.005;
     }, [totalOmzet, taxFreeLimit]);
 
     const handleCreateBilling = () => {
@@ -68,7 +66,7 @@ export default function IncentivesPage() {
                         <Badge variant="secondary" className="mb-2">Otomatis Aktif</Badge>
                         <h3 className="font-semibold mb-1">Pembebasan PPh Final untuk Omzet di Bawah Rp 500 Juta</h3>
                         <p className="text-sm text-muted-foreground">Sesuai PP 55/2022, Wajib Pajak Orang Pribadi dengan omzet tahunan tidak melebihi Rp 500 juta tidak dikenai PPh Final.</p>
-                        <p className="text-sm font-bold mt-2">Estimasi Penghematan Anda: {formatCurrency(estimasiPenghematan)}.</p>
+                        <p className="text-sm font-bold mt-2">Estimasi Penghematan Pajak Anda: {isLoading ? "..." : formatCurrency(estimasiPenghematan)}.</p>
                     </div>
                     <div className="p-4 border rounded-lg">
                         <Badge variant="outline" className="mb-2">Periodik</Badge>
@@ -86,13 +84,13 @@ export default function IncentivesPage() {
                 <CardContent className="space-y-4">
                     <div>
                         <Label htmlFor="pph">PPh Final Terutang</Label>
-                        <Input id="pph" value={formatCurrency(pphFinal)} readOnly className="font-bold text-lg h-12" />
+                        <Input id="pph" value={isLoading ? "..." : formatCurrency(pphFinal)} readOnly className="font-bold text-lg h-12" />
                     </div>
-                    <Button className="w-full" onClick={handleCreateBilling} disabled={pphFinal <= 0}>Buat Kode Billing (Simulasi)</Button>
+                    <Button className="w-full" onClick={handleCreateBilling} disabled={pphFinal <= 0 || isLoading}>Buat Kode Billing (Simulasi)</Button>
                     <Separator />
                     <div className="space-y-2 text-center">
                         <p className="text-sm text-muted-foreground">Kode Billing (Simulasi)</p>
-                        <p className="font-mono text-lg font-bold tracking-widest break-all">{billingCode}</p>
+                        <p className="font-mono text-lg font-bold tracking-widest break-all">{billingCode || '...'}</p>
                         <p className="text-sm text-muted-foreground">Gunakan QRIS untuk membayar</p>
                         {qrCodeImage && (
                             <div className="flex justify-center">

@@ -50,8 +50,8 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di lingkungan lo
 
 1.  **Clone repositori ini:**
     ```bash
-    git clone https://github.com/USERNAME/NAMA-REPO.git
-    cd NAMA-REPO
+    git clone https://github.com/YOUR_USERNAME/digipajak-umkm.git
+    cd digipajak-umkm
     ```
 
 2.  **Instal semua dependensi:**

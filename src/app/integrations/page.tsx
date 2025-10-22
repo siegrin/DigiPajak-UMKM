@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -72,77 +72,68 @@ export default function IntegrationsPage() {
                 </DialogContent>
             </Dialog>
         </div>
-        <Card>
-            <CardHeader>
-                <CardTitle>Status Koneksi</CardTitle>
-                <CardDescription>Daftar platform e-commerce dan status sinkronisasinya.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-6 pt-0 grid gap-4 md:grid-cols-2">
-                {isLoading ? (
-                    Array.from({ length: 4 }).map((_, index) => (
-                         <Card key={index} className="p-4 space-y-4">
-                            <div className="flex justify-between items-center">
-                                <Skeleton className="h-5 w-24" />
-                                <Skeleton className="h-8 w-20" />
-                            </div>
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-32" />
-                                <Skeleton className="h-10 w-full" />
-                            </div>
-                         </Card>
-                    ))
-                ) : (
-                    umkmData.platforms.map((p) => (
-                        <Card key={p.name} className="p-4 flex flex-col justify-between">
+        
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {isLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                    <Card key={index}>
+                        <CardHeader>
+                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-4 w-16" />
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <Skeleton className="h-10 w-full" />
+                            <Skeleton className="h-4 w-32" />
+                        </CardContent>
+                    </Card>
+                ))
+            ) : (
+                umkmData.platforms.map((p) => (
+                    <Card key={p.name} className="flex flex-col">
+                        <CardHeader className="flex-row items-center justify-between pb-4">
                             <div>
-                                <div className="flex items-start justify-between mb-4">
-                                    <div>
-                                        <p className="font-medium">{p.name}</p>
-                                        {p.connected ? (
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                            Terhubung
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
-                                            Putus
-                                            </span>
-                                        )}
-                                    </div>
-                                    <Button variant="outline" size="sm" onClick={() => toggleConnection(p.name)}>
-                                        {p.connected ? 'Putuskan' : 'Hubungkan'}
-                                    </Button>
-                                </div>
-                                <div className="space-y-1">
-                                    <Label htmlFor={`omzet-${p.name}`} className="text-sm">Omzet Tersinkronisasi</Label>
-                                    {p.connected ? (
-                                        <Input
-                                            id={`omzet-${p.name}`}
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={new Intl.NumberFormat('id-ID').format(p.omzet)}
-                                            onChange={(e) => handleOmzetChange(p.name, e.target.value)}
-                                            className="w-full text-right"
-                                            placeholder="0"
-                                        />
-                                    ) : (
-                                        <div className="flex items-center justify-center h-10 bg-muted/50 rounded-md">
-                                          <p className="text-xs text-muted-foreground">Hubungkan untuk melihat omzet</p>
-                                        </div>
-                                    )}
-                                </div>
+                                <CardTitle className="text-lg">{p.name}</CardTitle>
+                                {p.connected ? (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                    Terhubung
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
+                                    Putus
+                                    </span>
+                                )}
                             </div>
-                            {p.connected && p.lastSync && (
-                                <div className="mt-4">
-                                    <p className="text-xs text-muted-foreground">
-                                        Sinkr. terakhir: {p.lastSync}
-                                    </p>
+                            <Button variant="outline" size="sm" onClick={() => toggleConnection(p.name)}>
+                                {p.connected ? 'Putuskan' : 'Hubungkan'}
+                            </Button>
+                        </CardHeader>
+                        <CardContent className="flex-grow space-y-2">
+                             <Label htmlFor={`omzet-${p.name}`} className="text-sm">Omzet Tersinkronisasi</Label>
+                             {p.connected ? (
+                                <Input
+                                    id={`omzet-${p.name}`}
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={new Intl.NumberFormat('id-ID').format(p.omzet)}
+                                    onChange={(e) => handleOmzetChange(p.name, e.target.value)}
+                                    className="w-full text-right font-mono"
+                                    placeholder="0"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-10 bg-muted/50 rounded-md">
+                                    <p className="text-xs text-muted-foreground">Hubungkan untuk melihat omzet</p>
                                 </div>
                             )}
-                        </Card>
-                    ))
-                )}
-            </CardContent>
-        </Card>
+                        </CardContent>
+                        {p.connected && p.lastSync && (
+                            <CardFooter className="text-xs text-muted-foreground pt-4 pb-4">
+                                <p>Sinkr. terakhir: {p.lastSync}</p>
+                            </CardFooter>
+                        )}
+                    </Card>
+                ))
+            )}
+        </div>
     </div>
   )
 }

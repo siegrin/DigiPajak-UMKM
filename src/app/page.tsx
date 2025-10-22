@@ -83,7 +83,7 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card><CardHeader><Skeleton className="h-5 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-32" /><Skeleton className="h-4 w-40 mt-2" /></CardContent></Card>
           <Card><CardHeader><Skeleton className="h-5 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-32" /><Skeleton className="h-4 w-40 mt-2" /></CardContent></Card>
@@ -147,7 +147,7 @@ export default function Dashboard() {
             <div className="text-2xl font-bold">
                 <AnimatedCounter value={taxSavings} />
             </div>
-            <p className="text-xs text-muted-foreground">Berkat insentif bebas pajak Rp 500 jt.</p>
+            <p className="text-xs text-muted-foreground">Pajak yang dihemat dari insentif Rp 500 jt.</p>
           </CardContent>
         </Card>
         <Card>
@@ -329,7 +329,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
                <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                  <li>Akses ringkasan PP 55/2022 &amp; PP 23/2018.</li>
+                  <li>Akes ringkasan PP 55/2022 &amp; PP 23/2018.</li>
                   <li>Pertanyaan yang sering diajukan (FAQ).</li>
                   <li>Studi kasus dan simulasi perhitungan pajak.</li>
               </ul>

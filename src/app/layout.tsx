@@ -2,10 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
-import Sidebar from '@/components/layout/sidebar';
-import Header from '@/components/layout/header';
 import { ThemeProvider } from '@/components/theme-provider';
 import { UmkmProvider } from '@/context/UmkmContext';
+import AuthGuard from '@/components/AuthGuard';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -32,15 +31,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <UmkmProvider>
-            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-              <Sidebar />
-              <div className="flex flex-col">
-                <Header />
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-                  {children}
-                </main>
-              </div>
-            </div>
+            <AuthGuard>
+              {children}
+            </AuthGuard>
             <Toaster />
           </UmkmProvider>
         </ThemeProvider>

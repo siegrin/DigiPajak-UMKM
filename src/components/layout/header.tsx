@@ -5,11 +5,14 @@ import {
   Menu,
   ShieldCheck,
   User,
-  CreditCard,
   Settings,
   LogOut,
   Moon,
   Sun,
+  LayoutDashboard,
+  Link2,
+  BadgePercent,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePathname } from 'next/navigation';
 import {
   Breadcrumb,
@@ -33,12 +36,8 @@ import {
 import { useTheme } from 'next-themes';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import {
-  LayoutDashboard,
-  Link2,
-  BadgePercent,
-  BookOpen,
-} from 'lucide-react';
+import { useUmkm } from '@/context/UmkmContext';
+import { useState } from 'react';
 
 const navLinks = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -63,18 +62,21 @@ export default function Header() {
   const pageTitle = getPathBreadcrumb(pathname);
   const { setTheme, theme } = useTheme();
   const { toast } = useToast();
+  const { logout } = useUmkm();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
+    logout();
     toast({
-      title: "Berhasil Keluar (Simulasi)",
+      title: "Berhasil Keluar",
       description: "Anda telah keluar dari sesi Anda.",
     });
   };
 
   return (
     <TooltipProvider>
-      <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-        <Sheet>
+      <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-card px-4 lg:px-6">
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="shrink-0 md:hidden">
               <Menu className="h-5 w-5" />
@@ -82,10 +84,14 @@ export default function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
-            <nav className="grid gap-2 text-lg font-medium">
+             <SheetHeader>
+                <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
+            </SheetHeader>
+            <nav className="grid gap-2 text-base font-medium">
               <Link
                 href="/"
                 className="flex items-center gap-2 text-lg font-semibold mb-4"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 <ShieldCheck className="h-6 w-6 text-primary" />
                 <span>DigiPajak UMKM</span>
@@ -94,7 +100,8 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`-mx-2 flex items-center gap-4 rounded-xl px-4 py-2 ${
                     pathname === link.href
                       ? 'bg-muted text-primary'
                       : 'text-muted-foreground hover:text-foreground'
@@ -106,7 +113,8 @@ export default function Header() {
               ))}
                 <Link
                   href="/settings"
-                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`-mx-2 flex items-center gap-4 rounded-xl px-4 py-2 ${
                     pathname === "/settings"
                       ? 'bg-muted text-primary'
                       : 'text-muted-foreground hover:text-foreground'
@@ -174,10 +182,6 @@ export default function Header() {
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Pengaturan</span>
               </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem disabled>
-              <CreditCard className="mr-2 h-4 w-4" />
-              <span>Penagihan</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
